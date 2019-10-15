@@ -55,6 +55,12 @@ class ApplicationController < Sinatra::Base
         erb :'user/failure'
     end
 
+    get "/logout" do
+		session.clear
+		redirect "/login"
+	end
+
+
     helpers do
         def logged_in?
             !!session[:user_id]
