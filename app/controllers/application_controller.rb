@@ -11,6 +11,9 @@ class ApplicationController < Sinatra::Base
       set :session_secret, "secret"
     end
 
+    get '/' do
+    end
+
     get "/users/signup" do
         erb :'user/signup'
     end
@@ -37,19 +40,68 @@ class ApplicationController < Sinatra::Base
         user = User.find_by(:name => params[:name])
         if user && user.authenticate(params[:password])
             session[:user_id] = user.id
-            redirect "/success"
+            redirect "/cars"
         else 
             redirect "/failure"
         end
     end
 
-    get "/success" do
+    get "/cars" do
         if logged_in?
-            erb :'user/success'
+            erb :'car/index'
         else 
             redirect "/login"
         end
     end
+
+    get "/cars/new" do
+        erb :'car/new'    
+    end
+
+    post "/cars" do
+        car = Car.new
+
+        car.license_plate_number = params[:license]
+        car.make = params[:make]
+        car.model = params[:model]
+        car.year = params[:year]
+
+        car.save
+
+        redirect "/cars/#{car.id}"
+    end
+
+    get "/cars/:id" do
+
+        @car = Car.find(params[:id])
+
+        erb :'/car/show'
+
+    end
+
+    get "/cars/:id/edit" do
+        
+        @car = Car.find(params[:id])
+
+        erb :'car/edit'
+    end
+
+    patch "/cars/:id" do
+
+        car = Car.find(params[:id])
+        car.license_plate_number = params[:license]
+        car.make = params[:make]
+        car.model = params[:model]
+        car.year = params[:year]
+
+        car.save
+
+        redirect "/cars/#{car.id}"
+
+    end
+
+
+
 
     get "/failure" do
         erb :'user/failure'
@@ -73,6 +125,11 @@ class ApplicationController < Sinatra::Base
     end
 
 
+    delete '/cars/:id' do
+        Car.delete(params[:id])
+        redirect "/cars"
+    end
+    
 
 
 

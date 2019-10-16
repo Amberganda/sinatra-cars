@@ -1,0 +1,13 @@
+Your Car:<br>
+<%=@car.make%><br>
+<%=@car.model%><br>
+<%=@car.year%><br>
+
+<p>To edit your car, please click <a href='/cars/<%=@car.id%>/edit'>here</a>.</p>
+
+
+<form action="/cars/<%=@car.id%>" method="post">
+    <input id="hidden" type="hidden" name="_method" value="DELETE">
+
+    <input type="submit" id="delete" value="Delete">
+</form>

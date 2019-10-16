@@ -1,0 +1,10 @@
+<h3>Revise a car in your garage</h3>
+<form action="/cars/<%=@car.id%>" method="POST">
+    <input id="hidden" type="hidden" name="_method" value="PATCH">
+	License Plate Number:	<input type="text" name="license" value="<%=@car.license_plate_number%>">
+	Make: <input type="text" name="make" value="<%=@car.make%>" >
+	Model: <input type="text" name="model" value="<%=@car.model%>">
+    Year: <input type="number" name="year" value="<%=@car.year%>">
+    
+    <input type="submit" value="Update Car">
+</form>
