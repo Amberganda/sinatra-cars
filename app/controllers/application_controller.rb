@@ -11,7 +11,12 @@ class ApplicationController < Sinatra::Base
       set :session_secret, "secret"
     end
 
-    get '/' do
+    get "/" do
+        if logged_in?
+            redirect "/cars"
+        else
+            erb :index
+        end
     end
 
     get "/users/signup" do
@@ -100,9 +105,6 @@ class ApplicationController < Sinatra::Base
 
     end
 
-
-
-
     get "/failure" do
         erb :'user/failure'
     end
@@ -111,7 +113,6 @@ class ApplicationController < Sinatra::Base
 		session.clear
 		redirect "/login"
 	end
-
 
     helpers do
         def logged_in?
@@ -124,16 +125,10 @@ class ApplicationController < Sinatra::Base
 
     end
 
-
     delete '/cars/:id' do
         Car.delete(params[:id])
         redirect "/cars"
     end
-    
-
-
-
-
         
 
 end
