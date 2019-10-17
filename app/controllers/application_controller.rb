@@ -53,6 +53,7 @@ class ApplicationController < Sinatra::Base
 
     get "/cars" do
         if logged_in?
+            @cars = Car.all
             erb :'car/index'
         else 
             redirect "/login"

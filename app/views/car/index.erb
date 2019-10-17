@@ -1,6 +1,11 @@
 <h1>Sweet. Check out your Garage!</h1>
 <p>Here you can view all of the cars you own </p>
 <br>
+
+<% @cars.each_with_index do |car, index| %>
+    <%= "#{index+1}. #{car.license_plate_number}, #{car.make}, #{car.model}, #{car.year}" %><br>
+<% end %>
+
 <p>To add a new car, <a href="/cars/new">click here</a>.</p>
 
 <p><a href="/logout">Log Out</a></p>
