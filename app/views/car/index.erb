@@ -3,7 +3,14 @@
 <br>
 
 <% @cars.each_with_index do |car, index| %>
-    <%= "#{index+1}. #{car.license_plate_number}, #{car.make}, #{car.model}, #{car.year}" %><br>
+    <%= "#{index+1}. #{car.license_plate_number}, #{car.make}, #{car.model}, #{car.year}" %> 
+    <a href="/cars/<%=car.id%>/edit">Edit</a> 
+    <form action="/cars/<%=car.id%>" method="post">
+        <input id="hidden" type="hidden" name="_method" value="DELETE">
+
+        <input type="submit" id="delete" value="Delete">
+    </form>   
+    <br>
 <% end %>
 
 <p>To add a new car, <a href="/cars/new">click here</a>.</p>
