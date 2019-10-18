@@ -68,16 +68,19 @@ class ApplicationController < Sinatra::Base
     end
 
     post "/cars" do
-        car = Car.new
+        @car = Car.new
 
-        car.license_plate_number = params[:license]
-        car.make = params[:make]
-        car.model = params[:model]
-        car.year = params[:year]
-
-        car.save
-
-        redirect "/cars/#{car.id}"
+        @car.license_plate_number = params[:license]
+        @car.make = params[:make]
+        @car.model = params[:model]
+        @car.year = params[:year]
+        
+        if @car.save
+            redirect "/cars/#{@car.id}"
+        else
+            erb :'/car/error'
+        end
+       
     end
 
     get "/cars/:id" do

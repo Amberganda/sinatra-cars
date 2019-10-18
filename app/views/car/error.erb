@@ -1,0 +1,6 @@
+<%= @car.errors %>
+<% @car.errors.full_messages.each do |msg| %>
+    <%= msg %>
+<% end %>
+
+<p>To add a new car, <a href="/cars/new">click here</a>.</p>
