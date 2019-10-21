@@ -56,7 +56,8 @@ class ApplicationController < Sinatra::Base
 
     get "/cars" do
         if logged_in?
-            @cars = Car.all
+            @cars = current_user.cars
+            # @cars = Car.all
             erb :'car/index'
         else 
             redirect "/login"
@@ -64,51 +65,72 @@ class ApplicationController < Sinatra::Base
     end
 
     get "/cars/new" do
-        erb :'car/new'    
+        if logged_in?
+            erb :'car/new'    
+        else
+            redirect "/login"
+        end
     end
 
     post "/cars" do
-        @car = Car.new
+        if logged_in?
+            @car = Car.new
 
-        @car.license_plate_number = params[:license]
-        @car.make = params[:make]
-        @car.model = params[:model]
-        @car.year = params[:year]
-        
-        if @car.save
-            redirect "/cars/#{@car.id}"
+            @car.license_plate_number = params[:license]
+            @car.make = params[:make]
+            @car.model = params[:model]
+            @car.year = params[:year]
+            @car.user = current_user
+    
+            
+            if @car.save
+                redirect "/cars/#{@car.id}"
+            else
+                erb :'/car/error'
+            end
+     
         else
-            erb :'/car/error'
+            redirect "/login"
         end
+
        
     end
 
     get "/cars/:id" do
 
         @car = Car.find(params[:id])
-
-        erb :'/car/show'
-
+        if @car.user == current_user
+            erb :'/car/show'
+        else
+            redirect "/cars"
+        end
     end
 
     get "/cars/:id/edit" do
         
         @car = Car.find(params[:id])
-
-        erb :'car/edit'
+        if @car.user == current_user
+            erb :'car/edit'
+        else
+            redirect "/cars"
+        end
     end
 
     patch "/cars/:id" do
 
         car = Car.find(params[:id])
-        car.license_plate_number = params[:license]
-        car.make = params[:make]
-        car.model = params[:model]
-        car.year = params[:year]
+        if car.user == current_user
+            car.license_plate_number = params[:license]
+            car.make = params[:make]
+            car.model = params[:model]
+            car.year = params[:year]
 
-        car.save
+            car.save
 
-        redirect "/cars/#{car.id}"
+            redirect "/cars/#{car.id}"
+        else
+            redirect "/cars"
+        end
 
     end
 
@@ -133,7 +155,10 @@ class ApplicationController < Sinatra::Base
     end
 
     delete '/cars/:id' do
-        Car.delete(params[:id])
+        car = Car.find(params[:id])
+        if car.user == current_user
+            car.delete
+        end
         redirect "/cars"
     end
         
