@@ -65,11 +65,14 @@ class ApplicationController < Sinatra::Base
     end
 
     get "/cars/new" do
-        if logged_in?
-            erb :'car/new'    
-        else
-            redirect "/login"
-        end
+        
+        redirect_if_not_logged_in
+        erb:'cars/new'
+
+        # if logged_in?
+        #     erb :'car/new'    
+        # else
+
     end
 
     post "/cars" do
@@ -97,8 +100,11 @@ class ApplicationController < Sinatra::Base
     end
 
     get "/cars/:id" do
-
+        begin
         @car = Car.find(params[:id])
+        rescue ActiveRecord::RecordNotFound
+            redirect '/failure'
+        end
         if @car.user == current_user
             erb :'/car/show'
         else
@@ -147,6 +153,15 @@ class ApplicationController < Sinatra::Base
         def logged_in?
             !!session[:user_id]
         end
+
+        def redirect_if_not_logged_in
+            if !session[:user_id]
+                redirect "/login"
+            end
+
+        end
+
+        
 
         def current_user
             User.find(session[:user_id])
